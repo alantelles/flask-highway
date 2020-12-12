@@ -53,7 +53,13 @@ def blueprint(params):
     tps.writelines(cont)
     
   with open(routes, 'wt') as rtf:
-    rtf.writelines([f'root: {bp_name}_views.index'])
+    rt_cont = [
+      '# register your routes here\n',
+      '# they will be loaded in app startup\n',
+      '# no need to use conventional Flask routing\n',
+      f'root: {bp_name}_views.index'
+    ]
+    rtf.writelines(rt_cont)
     
   print(f'Blueprint {bp_name} created')
 
