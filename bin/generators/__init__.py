@@ -3,6 +3,7 @@ import os
 import shutil
 import traceback
 
+
 def generate(params):
   opt = {
     'blueprint': blueprint,
@@ -50,7 +51,7 @@ def blueprint(params):
           bp_name_camel=bp_name_camel))
           
       except KeyError:
-        pass
+        cont.append(li)
       
   with open(dest, 'wt') as tps:
     tps.writelines(cont)
@@ -77,7 +78,69 @@ def blueprint(params):
     
   print(f'Blueprint {bp_name} created')
 
-#g controller [name] in [bp_name]
-def controller(params):
+# highway generate views [name] in [blueprint_name]
+def views(params):
+  try:
+    view_name = params[0]
+    conj = params[1]
+    bp_name = params[2]
+    if conj == 'in':
+      bp_name_camel = [w.capitalize() for w in bp_name.split('_')]
+      bp_name_camel = ''.join(bp_name_camel)
+      view_name_camel = [w.capitalize() for w in view_name.split('_')]
+      view_name_camel = ''.join(view_name_camel)
+
+      out = []
+      vp = f'{BLPLTS}/py/blueprint.view.py'
+      dest = f'{BPP}/{bp_name}/views/{view_name}.py'
+      with open(vp, 'rt') as vwbp:
+        for l in vwbp.readlines():
+          out.append(l.format(view_name=view_name, bp_name=bp_name, view_name_camel=view_name_camel))
+
+      with open(dest, 'wt') as vwbp:
+        vwbp.writelines(out)
+
+
+      with open(VW_TP, 'rt') as tps:
+        cont = []
+        for li in tps.readlines():
+          try:
+            cont.append(
+            li.format(
+              bp_name=bp_name, view_name_camel=view_name_camel))
+              
+          except KeyError:
+            cont.append(li)
+            pass
+
+      os.mkdir(f'{BPP}/{bp_name}/templates/{bp_name}/{view_name}')
+
+      with open(f'{BPP}/{bp_name}/templates/{bp_name}/{view_name}/index.html', 'wt') as tpp:
+        tpp.writelines(cont)
+
+      with open(f'{BPP}/{bp_name}/__init__.py', 'rt') as inbp:
+        lines = inbp.readlines()
+
+      for i in range(len(lines)):
+        if lines[i].strip() == "#DON'T REMOVE: blueprint views register section":
+          lines.insert(i+1, f'from app.blueprints.{bp_name}.views.{view_name} import {view_name}_views\n')
+          continue
+
+        if lines[i].strip() == "#DON'T TOUCH: register routes section":
+          rgp = i + 1
+          reg = lines[rgp].strip()
+          reg = reg[:reg.rfind(')')]
+          reg += f", {view_name}={view_name}_views)\n"
+          lines[rgp] = reg
+
+      with open(f'{BPP}/{bp_name}/__init__.py', 'wt') as inbp:
+        inbp.writelines(lines)
+
+    else:
+        print('Connector not recognized')
+
+  except KeyError:
+    raise KeyError('Wrong number of arguments for this generator')
+
   pass
   

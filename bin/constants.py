@@ -13,3 +13,4 @@ rp = rp[:rp.rfind(os.sep)]
 BLPLTS = f'{rp}/boilerplates'
 BP_INIT = f'{BLPLTS}/py/blueprint.__init__.py'
 BP_TP = f'{BLPLTS}/html/blueprint.index.html'
+VW_TP = f'{BLPLTS}/html/view.index.html'

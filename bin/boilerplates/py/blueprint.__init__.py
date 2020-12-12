@@ -20,5 +20,5 @@ class {bp_name_camel}Views:
 {bp_name}_views = {bp_name_camel}Views()
 
 #DON'T TOUCH: register routes section
-register_routes({bp_name}, {bp_name}_views={bp_name}_views)
+register_routes('{bp_name}', {bp_name}_views={bp_name}_views)
 #END: register routes section
