@@ -1,25 +1,11 @@
 import sys, os, traceback
 from bin.constants import *
 from bin.generators import generate
+from bin.generators.new_project import new_project
 
 parts = sys.argv
   
-def new_project(params):
-  try:
-    os.mkdir(APPP)
-    os.mkdir(BPP)
-    os.mkdir(TPS)
-    os.mkdir(DTB)
-    os.mkdir(LYT)
-    os.mkdir(STCS)
-   
-    
-    print('New Flask Highway project initialized')
-    
-  except IndexError:
-    raise IndexError('A name for your project was not provided')
-    
-  
+
   
 opt = {
   'generate': generate,
@@ -27,9 +13,13 @@ opt = {
   'new': new_project
 }
 if len(parts) > 1:
-  handler = opt[parts[1]]
-  params = parts[2:]
-  handler(params)
+  handler = opt.get(parts[1])
+  if handler:
+    params = parts[2:]
+    handler(params)
+
+  else:
+    print('Invalid option')
 
 else:
   no_args = """Flask-Highway CLI tool/startup app for accelerating developing with Flask
