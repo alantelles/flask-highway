@@ -1,4 +1,6 @@
 def new_project(params):
+  # highway new [project_name]
+  
   print(f'Creating new Flask Highway project called "{params[0]}"')
   import requests, os
   from zipfile import ZipFile

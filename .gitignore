@@ -39,6 +39,4 @@ db.sqlite3-journal
 venv/
 wenv/
 db.sqlite3
-src/app/
-
-requirements.txt
+.fuse*

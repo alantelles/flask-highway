@@ -6,6 +6,7 @@ TPS = f'{APPP}/templates'
 LYT = f'{TPS}/layouts'
 DTB = f'{APPP}/database'
 STCS = f'{APPP}/static'
+APP_INIT = f'{APPP}/__init__.py'
 
 rp = os.path.realpath(__file__)
 rp = rp[:rp.rfind(os.sep)]

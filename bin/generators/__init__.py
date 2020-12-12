@@ -6,13 +6,16 @@ import traceback
 def generate(params):
   opt = {
     'blueprint': blueprint,
-    'controller': controller
+    'views': views
   }
   handler = opt[params[0]]
   handler(params[1:])
 
-#g blueprint [name]
+def views(params):
+  pass
+
 def blueprint(params):
+  # highway generate blueprint [blueprint_name]
   bp_name = params[0]
   bp_name_camel = [w.capitalize() for w in bp_name.split('_')]
   bp_name_camel = ''.join(bp_name_camel)
@@ -60,6 +63,17 @@ def blueprint(params):
       f'root: {bp_name}_views.index'
     ]
     rtf.writelines(rt_cont)
+
+  with open(APP_INIT, 'rt') as apin:
+    cont = apin.readlines()
+    for i in range(len(cont)):
+      if cont[i].strip() == "#DON'T REMOVE: blueprints register section":
+        cont.insert(i+1, f'app.register_blueprint({bp_name})\n')
+        cont.insert(i+1, f'from app.blueprints.{bp_name} import {bp_name}\n')
+        break
+
+  with open(APP_INIT, 'wt') as apin:
+    apin.writelines(cont)
     
   print(f'Blueprint {bp_name} created')
 
