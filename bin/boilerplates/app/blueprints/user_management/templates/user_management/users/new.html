@@ -1,0 +1,24 @@
+{% extends 'layouts/base.html' %}
+{% block content %}
+<h1>Users</h1>
+<h3>New user</h3>
+<form action="{{ url_for('user_management.users_create') }}" method="post">
+    <label for="name">Name</label>
+    <input type="text" name="name" id="name">
+    <br>
+    <label for="username">Username</label>
+    <input type="text" name="username" id="username">
+    <br>
+    <label for="password">Pasword</label>
+    <input type="password" name="password" id="password">
+    <br>
+    <label for="role">Role</label><br>
+    <select multiple name="roles" id="role">
+    {% for role in roles %}
+        <option value="{{ role.id }}">{{ role.name }}</option>
+    {% endfor %}
+    </select>
+    <br>
+    <input type="submit" value="Save">
+</form>
+{% endblock %}

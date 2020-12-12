@@ -1,0 +1,10 @@
+{% extends 'layouts/base.html' %}
+{% block content %}
+<h1>User management</h1>
+<p>This is the user management index</p>
+<ul>
+{% for cont in views %}
+    <li>{{ cont }}</li>
+{% endfor %}
+</ul>
+{% endblock %}

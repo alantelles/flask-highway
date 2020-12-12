@@ -1,0 +1,10 @@
+{% extends 'layouts/base.html' %}
+{% block content %}
+<h1>Roles</h1>
+<p>This is the roles index</p>
+<ul>
+{% for r in roles %}
+    <li><a href="{{ url_for('user_management.roles_show', id=r.id)}}">{{ r.name }}</a></li>
+{% endfor %}
+</ul>
+{% endblock %}

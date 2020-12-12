@@ -1,0 +1,10 @@
+{% extends 'layouts/base.html' %}
+{% block content %}
+<h1>Roles</h1>
+<h3>New Role</h3>
+<form action="{{ url_for('user_management.roles_create') }}" method="post">
+    <label for="name"></label>
+    <input type="text" name="name" id="name">
+    <input type="submit" value="Save">
+</form>
+{% endblock %}

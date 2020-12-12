@@ -1,0 +1,14 @@
+{% extends 'layouts/base.html' %}
+{% block content %}
+<h1>Roles</h1>
+<p><strong>Role name: </strong>{{ role.name }}</p>
+<h3>Users with this role</h3>
+<ul>
+{% for user in role.users %}
+    <li>{{ user.name }}</li>
+{% else %}
+    <li>No users with this role</li>
+{% endfor %}
+</ul>
+<a href="{{ url_for('user_management.roles_index') }}">back to roles</a>
+{% endblock %}
