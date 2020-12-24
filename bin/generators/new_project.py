@@ -10,10 +10,19 @@ def new_project(params):
     rp = os.path.realpath(__file__)
     rp = rp[:rp.rfind(os.sep)]
     zip_path = os.path.join(rp, 'app.zip')
+    no_cache = False
+    if len(params) > 1:
+        no_cache = params[1] == '--no-cache'
+        print('Forcing new download due to option "--no-cache"')
 
-    print('Verifying cached Flask Highway Base app')
-    if not os.path.isfile(zip_path):
-      print('Flask Highway Base app not found')
+    else:
+        print('Verifying cached Flask Highway Base app')
+
+    has_cache = os.path.isfile(zip_path)
+    if not has_cache or no_cache:
+      if not has_cache:
+          print('Flask Highway Base app not found')
+
       print('Downloading from github. May take a while')
       url = 'https://github.com/alantelles/flask-highway-base-app/archive/main.zip'
       repo = requests.get(url)

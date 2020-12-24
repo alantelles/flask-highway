@@ -84,6 +84,20 @@ def views(params):
     view_name = params[0]
     conj = params[1]
     bp_name = params[2]
+    if len(params) > 3:
+      actions = params[3]
+      if actions != ':resource':
+        actions = [action.strip() for action in actions.split(',')]
+        views_list = ''
+        template = """
+    def {action}(self):
+        return render_template('{bp_name}/{view_name}/{action}.html')
+
+"""
+        for action in actions:
+          views_list += template.format(bp_name=bp_name, view_name=view_name, action=action)
+
+
     if conj == 'in':
       bp_name_camel = [w.capitalize() for w in bp_name.split('_')]
       bp_name_camel = ''.join(bp_name_camel)
@@ -95,7 +109,7 @@ def views(params):
       dest = f'{BPP}/{bp_name}/views/{view_name}.py'
       with open(vp, 'rt') as vwbp:
         for l in vwbp.readlines():
-          out.append(l.format(view_name=view_name, bp_name=bp_name, view_name_camel=view_name_camel))
+          out.append(l.format(view_name=view_name, bp_name=bp_name, view_name_camel=view_name_camel, views_list=views_list))
 
       with open(dest, 'wt') as vwbp:
         vwbp.writelines(out)

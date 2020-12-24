@@ -1,8 +1,7 @@
 from flask import render_template, redirect, request, url_for, session, flash
+from app.views.base_views import BaseViews
 import app.blueprints.user_management.views.access_control as access_control
 
-class {view_name_camel}Views:    
-    def index(self):
-        return render_template('{bp_name}/{view_name}/index.html')
-
+class {view_name_camel}Views(BaseViews):    
+{views_list}
 {view_name}_views = {view_name_camel}Views()
