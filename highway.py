@@ -37,11 +37,11 @@ Usage: highway [options]
 
 Contribute on GitHub!
 
-  https://github.com/alantelles/flask-highway-cli
+  https://github.com/alantelles/flask-highway
 
 Flask Highway base app
 
-  https://github.com/alantelles/flask-highway
+  https://github.com/alantelles/flask-highway-base-app
   """
   print(no_args)
 

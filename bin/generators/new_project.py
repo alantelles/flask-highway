@@ -6,7 +6,7 @@ def new_project(params):
   from zipfile import ZipFile
 
   try:
-    proj = 'flask-highway-main'
+    proj = 'flask-highway-base-app-main'
     rp = os.path.realpath(__file__)
     rp = rp[:rp.rfind(os.sep)]
     zip_path = os.path.join(rp, 'app.zip')
@@ -15,7 +15,7 @@ def new_project(params):
     if not os.path.isfile(zip_path):
       print('Flask Highway Base app not found')
       print('Downloading from github. May take a while')
-      url = 'https://github.com/alantelles/flask-highway/archive/main.zip'
+      url = 'https://github.com/alantelles/flask-highway-base-app/archive/main.zip'
       repo = requests.get(url)
       print('Download finished')
       print('Writing zip clone to disk')

@@ -40,3 +40,4 @@ venv/
 wenv/
 db.sqlite3
 .fuse*
+app.zip
