@@ -84,25 +84,24 @@ def views(params):
     view_name = params[0]
     conj = params[1]
     bp_name = params[2]
-    if len(params) > 3:
-      actions = params[3]
-      if actions != ':resource':
-        actions = [action.strip() for action in actions.split(',')]
-        views_list = ''
-        template = """
-    def {action}(self):
-        return render_template('{bp_name}/{view_name}/{action}.html')
-
-"""
-        for action in actions:
-          views_list += template.format(bp_name=bp_name, view_name=view_name, action=action)
-
+    
 
     if conj == 'in':
       bp_name_camel = [w.capitalize() for w in bp_name.split('_')]
       bp_name_camel = ''.join(bp_name_camel)
       view_name_camel = [w.capitalize() for w in view_name.split('_')]
       view_name_camel = ''.join(view_name_camel)
+      if len(params) > 3:
+        actions = params[3]
+        if actions != ':resource':
+          actions = [action.strip() for action in actions.split(',')]
+          views_list = ''
+          template = """
+    def {action}(self):
+        return render_template('{bp_name}/{view_name}/{action}.html')
+  """
+          for action in actions:
+            views_list += template.format(bp_name=bp_name, view_name=view_name, action=action)
 
       out = []
       vp = f'{BLPLTS}/py/blueprint.view.py'
@@ -114,23 +113,24 @@ def views(params):
       with open(dest, 'wt') as vwbp:
         vwbp.writelines(out)
 
-
-      with open(VW_TP, 'rt') as tps:
-        cont = []
-        for li in tps.readlines():
-          try:
-            cont.append(
-            li.format(
-              bp_name=bp_name, view_name_camel=view_name_camel))
-              
-          except KeyError:
-            cont.append(li)
-            pass
-
       os.mkdir(f'{BPP}/{bp_name}/templates/{bp_name}/{view_name}')
 
-      with open(f'{BPP}/{bp_name}/templates/{bp_name}/{view_name}/index.html', 'wt') as tpp:
-        tpp.writelines(cont)
+      with open(VW_TP, 'rt') as tps:
+        tp_lines = tps.readlines()
+        for action in actions:
+          cont = []
+          for li in tp_lines:
+            try:
+              cont.append(
+              li.format(
+                bp_name=bp_name, view_name_camel=view_name_camel, action=action))
+                
+            except KeyError:
+              cont.append(li)
+              pass
+
+          with open(f'{BPP}/{bp_name}/templates/{bp_name}/{view_name}/{action}.html', 'wt') as tpp:
+            tpp.writelines(cont)
 
       with open(f'{BPP}/{bp_name}/__init__.py', 'rt') as inbp:
         lines = inbp.readlines()
