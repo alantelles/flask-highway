@@ -101,14 +101,38 @@ def views(params):
           views_list = ''
           template = """
     @render
-    def {action}(self):
+    def {action}(self{params}):
         pass
   """
+
+          
           for action in actions:
+            params = ''
+            action_view = action
             comma = action.find('|')
             if comma:
-              action = action[:comma]
-            views_list += template.format(bp_name=bp_name, view_name=view_name, action=action)
+              action_view = action[:comma]
+            parts = action.split('|')
+            if len(parts) > 1:
+              action_route_splitted = parts[1].split('/')
+              params_list = []
+              for ac_part in action_route_splitted:
+                if ac_part.strip() == '':
+                  continue
+                print(ac_part)  
+                if ac_part.find('>') > 0:
+                  route_param = ac_part[1:-1]
+                  is_typed = route_param.find(':')
+                  if is_typed:
+                    route_param = route_param[is_typed+1:]
+                  print(f'Appending {route_param}')
+                  params_list.append(route_param)
+                  
+
+              if len(params_list) > 0:
+                params = ', ' + ', '.join(params_list)
+
+            views_list += template.format(bp_name=bp_name, view_name=view_name, action=action_view, params=params)
 
           routes_path = f'{BPP}/{bp_name}/routes.yaml'        
           with open(routes_path, 'rt') as routes:
