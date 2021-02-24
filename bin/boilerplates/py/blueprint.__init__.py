@@ -1,6 +1,6 @@
 import os
 from flask import Blueprint, render_template, request, url_for, redirect, session, flash
-
+from app.views.base_views import BaseViews
 from dont_touch.core_views import render
 from dont_touch.helpers.routes import register_routes
 
@@ -14,10 +14,10 @@ from dont_touch.helpers.routes import register_routes
 {bp_name}_path = os.path.join(os.getcwd(),'app', 'blueprints', '{bp_name}')
 
 
-class {bp_name_camel}Views:
-    @render
+class {bp_name_camel}Views(BaseViews):
+    
     def index(self):
-        pass
+        self.render('/blog/index')
 
 {bp_name}_views = {bp_name_camel}Views()
 
