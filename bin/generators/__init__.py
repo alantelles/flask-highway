@@ -91,6 +91,8 @@ def views(params):
       bp_name_camel = ''.join(bp_name_camel)
       view_name_camel = [w.capitalize() for w in view_name.split('_')]
       view_name_camel = ''.join(view_name_camel)
+      views_list = '    pass\n'
+      actions = []
       if len(params) > 3:
         actions = params[3]
         if actions != ':resource':
@@ -108,6 +110,7 @@ def views(params):
       vp = f'{BLPLTS}/py/blueprint.view.py'
       dest = f'{BPP}/{bp_name}/views/{view_name}.py'
       with open(vp, 'rt') as vwbp:
+        
         for l in vwbp.readlines():
           out.append(l.format(view_name=view_name, bp_name=bp_name, view_name_camel=view_name_camel, views_list=views_list))
 
