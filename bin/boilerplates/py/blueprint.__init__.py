@@ -13,8 +13,9 @@ from dont_touch.helpers.routes import register_routes
 {bp_name} = Blueprint('{bp_name}', __name__, template_folder='templates')
 {bp_name}_path = os.path.join(os.getcwd(),'app', 'blueprints', '{bp_name}')
 
-@render
+
 class {bp_name_camel}Views:
+    @render
     def index(self):
         pass
 
