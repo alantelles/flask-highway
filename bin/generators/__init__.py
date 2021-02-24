@@ -119,13 +119,11 @@ def views(params):
               for ac_part in action_route_splitted:
                 if ac_part.strip() == '':
                   continue
-                print(ac_part)  
                 if ac_part.find('>') > 0:
                   route_param = ac_part[1:-1]
                   is_typed = route_param.find(':')
                   if is_typed:
                     route_param = route_param[is_typed+1:]
-                  print(f'Appending {route_param}')
                   params_list.append(route_param)
                   
 
