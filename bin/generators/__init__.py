@@ -103,7 +103,7 @@ def views(params):
     {will_render}
     def {action}(self{params}):
         pass
-  """
+"""
 
           
           for action in actions:
@@ -202,7 +202,7 @@ def views(params):
         for action in actions:
           if action[0] == '*':
             continue
-            
+
           comma = action.find('|')
           if comma:
             action = action[:comma]
