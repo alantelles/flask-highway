@@ -100,14 +100,22 @@ def views(params):
           actions = [action.strip() for action in actions.split(',')]    
           views_list = ''
           template = """
-    @render
+    {will_render}
     def {action}(self{params}):
         pass
   """
 
           
           for action in actions:
-            params = ''
+            params_from_route = ''
+            
+            will_render = ''
+            if action[0] != '*':
+              will_render = '@render'
+            
+            else:
+              action = action[1:]
+            
             action_view = action
             comma = action.find('|')
             if comma:
@@ -128,9 +136,9 @@ def views(params):
                   
 
               if len(params_list) > 0:
-                params = ', ' + ', '.join(params_list)
+                params_from_route = ', ' + ', '.join(params_list)
 
-            views_list += template.format(bp_name=bp_name, view_name=view_name, action=action_view, params=params)
+            views_list += template.format(bp_name=bp_name, view_name=view_name, action=action_view, params=params_from_route, will_render=will_render)
 
           routes_path = f'{BPP}/{bp_name}/routes.yaml'        
           with open(routes_path, 'rt') as routes:
@@ -192,6 +200,9 @@ def views(params):
         tp_lines = tps.readlines()
         
         for action in actions:
+          if action[0] == '*':
+            continue
+            
           comma = action.find('|')
           if comma:
             action = action[:comma]
