@@ -2,6 +2,7 @@ from bin.constants import *
 import os
 import shutil
 import traceback
+import yaml
 
 
 def generate(params):
@@ -60,7 +61,7 @@ def blueprint(params):
     rt_cont = [
       '# register your routes here\n',
       '# they will be loaded in app startup\n',
-      '# no need to use conventional Flask routing\n',
+      '# you should not use conventional Flask routing\n',
       f'root: {bp_name}_views.index'
     ]
     rtf.writelines(rt_cont)
@@ -94,9 +95,9 @@ def views(params):
       views_list = '    pass\n'
       actions = []
       if len(params) > 3:
-        actions = params[3]
         if actions != ':resource':
-          actions = [action.strip() for action in actions.split(',')]
+          actions = params[3]
+          actions = [action.strip() for action in actions.split(',')]    
           views_list = ''
           template = """
     @render
@@ -104,7 +105,53 @@ def views(params):
         pass
   """
           for action in actions:
+            comma = action.find('|')
+            if comma:
+              action = action[:comma]
             views_list += template.format(bp_name=bp_name, view_name=view_name, action=action)
+
+          routes_path = f'{BPP}/{bp_name}/routes.yaml'        
+          with open(routes_path, 'rt') as routes:
+            handler = yaml.load(routes, Loader=yaml.FullLoader)
+
+          if 'views' not in handler:
+            handler['views'] = {}
+
+          if view_name not in handler['views']:
+            handler['views'][view_name] = {}
+
+          if 'routes' not in handler['views'][view_name]:
+            handler['views'][view_name]['routes']  = []
+          
+          view_routes = handler['views'][view_name]['routes']
+          # syntax:
+          # value : register {'route': 'value', 'name': 'value'} (implicit: method GET, view 'value')
+          # value|some/route/<str:param> register {'route': 'some/route/<str:param>', 'name': 'value'} (implicit: method GET, view value)
+          # value|some/route/<str:param>|POST register {'route': 'some/route/<str:param>', 'name': 'value', 'method': 'POST'} (implicit: view value)
+          # value|some/route/<str:param>|POST|my_view register {'route': 'some/route/<str:param>', 'name': 'value', 'method': 'POST', 'view': 'my_view'}
+          for action in actions:
+            splitted = action.split('|')
+            register = {
+              'route': splitted[0],
+              'name': splitted[0]
+            }
+            if len(splitted) > 1:
+              register['route'] = splitted[1]
+
+            if len(splitted) > 2:
+              register['method'] = splitted[2]
+
+            if len(splitted) == 4:
+              register['view'] = splitted[3]
+
+            if len(splitted) > 4:
+              raise Exception('Too many arguments for generate actions')
+
+            view_routes.append(register)
+
+          with open(routes_path, 'wt') as routes:
+            yaml.dump(handler, routes)
+
 
       out = []
       vp = f'{BLPLTS}/py/blueprint.view.py'
@@ -121,7 +168,11 @@ def views(params):
 
       with open(VW_TP, 'rt') as tps:
         tp_lines = tps.readlines()
+        
         for action in actions:
+          comma = action.find('|')
+          if comma:
+            action = action[:comma]
           cont = []
           for li in tp_lines:
             try:
