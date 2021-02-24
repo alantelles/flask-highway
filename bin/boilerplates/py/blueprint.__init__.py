@@ -1,6 +1,7 @@
 import os
-from flask import Blueprint, render_template, request, url_for, redirect, session
+from flask import Blueprint, render_template, request, url_for, redirect, session, flash
 
+from dont_touch.core_views import render
 from dont_touch.helpers.routes import register_routes
 
 #DON'T REMOVE: blueprint views register section
@@ -12,10 +13,10 @@ from dont_touch.helpers.routes import register_routes
 {bp_name} = Blueprint('{bp_name}', __name__, template_folder='templates')
 {bp_name}_path = os.path.join(os.getcwd(),'app', 'blueprints', '{bp_name}')
 
-
+@render
 class {bp_name_camel}Views:
     def index(self):
-        return render_template("{bp_name}/index.html")
+        pass
 
 {bp_name}_views = {bp_name_camel}Views()
 
