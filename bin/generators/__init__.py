@@ -118,8 +118,10 @@ def views(params):
             
             action_view = action
             comma = action.find('|')
-            if comma:
+
+            if comma > 0:
               action_view = action[:comma]
+
             parts = action.split('|')
             if len(parts) > 1:
               action_route_splitted = parts[1].split('/')
@@ -161,6 +163,9 @@ def views(params):
           # value|some/route/<str:param>|POST|my_view register {'route': 'some/route/<str:param>', 'name': 'value', 'method': 'POST', 'view': 'my_view'}
           for action in actions:
             splitted = action.split('|')
+            if splitted[0][0] == '*':
+              splitted[0] = splitted[0][1:]
+
             register = {
               'route': splitted[0],
               'name': splitted[0]
@@ -204,7 +209,7 @@ def views(params):
             continue
 
           comma = action.find('|')
-          if comma:
+          if comma > 0:
             action = action[:comma]
           cont = []
           for li in tp_lines:
