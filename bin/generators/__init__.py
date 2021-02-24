@@ -97,8 +97,9 @@ def views(params):
           actions = [action.strip() for action in actions.split(',')]
           views_list = ''
           template = """
+    @render
     def {action}(self):
-        return render_template('{bp_name}/{view_name}/{action}.html')
+        pass
   """
           for action in actions:
             views_list += template.format(bp_name=bp_name, view_name=view_name, action=action)
