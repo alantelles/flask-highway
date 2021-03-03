@@ -17,7 +17,7 @@ from dont_touch.helpers.routes import register_routes
 class {bp_name_camel}Views(BaseViews):
     
     def index(self):
-        return self.render('/blog/index')
+        return self.render('/{bp_name}/index')
 
 {bp_name}_views = {bp_name_camel}Views()
 
